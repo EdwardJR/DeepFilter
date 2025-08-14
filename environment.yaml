@@ -95,6 +95,8 @@ dependencies:
   - zipp=3.4.0=pyhd3eb1b0_0
   - zlib=1.2.11=h7b6447c_3
   - zstd=1.4.5=h9ceee32_0
+  - matplotlib-inline
+  - IPython
   - pip:
     - chardet==3.0.4
     - idna==2.10
