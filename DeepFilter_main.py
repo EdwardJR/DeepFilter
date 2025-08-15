@@ -35,8 +35,8 @@ if __name__ == "__main__":
                       'Multibranch LANLD'
                       ]
 
-    # noise_versions = [1, 2]
-    noise_versions = [1]
+    noise_versions = [1, 2]
+    #noise_versions = [1]
     for nv in noise_versions:
         # Data_Preparation() function assumes that QT database and Noise Stress Test Database are uncompresed
         # inside a folder called data
