@@ -96,7 +96,7 @@ bash Miniconda3-latest-Linux-x86_64.sh
 
 Clone this repository to your local machine:
 ```bash
-git clone https://github.com/fperdigon/DeepFilter
+git clone https://github.com/EdwardJR/DeepFilter.git
 cd DeepFilter
 ```
 
@@ -107,12 +107,6 @@ Create the conda environment with GPU support for faster training:
 ```bash
 conda env create -f environment_gpu.yaml
 conda activate DeepFilter-GPU
-```
-
-**Note:** If you don't have a CUDA-capable GPU, use the CPU environment instead:
-```bash
-conda env create -f environment.yaml
-conda activate DeepFilter
 ```
 
 ### Step 4: Download Dataset
@@ -150,7 +144,7 @@ This will train 6 different models:
 Export all trained models to TensorFlow SavedModel format:
 
 ```bash
-python simple_export_all.py
+python export_all_models.py
 ```
 
 ### Step 7: Convert to ONNX
@@ -179,13 +173,6 @@ Create detailed Signal-to-Noise Ratio analysis:
 python analyze_snr_performance.py
 ```
 
-### Step 10: Test ONNX Models (Optional)
-
-Test the exported ONNX models for validation:
-
-```bash
-python test_onnx_models_only.py
-```
 
 ## Expected Results
 
