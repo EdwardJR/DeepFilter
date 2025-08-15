@@ -1,0 +1,23 @@
+name: DeepFilter-GPU
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.10
+  - numpy
+  - pandas
+  - matplotlib
+  - scipy
+  - scikit-learn
+  - seaborn
+  - h5py
+  - pip
+  - pip:
+    - tensorflow[and-cuda]==2.12.0
+    - wfdb
+    - mne
+    - prettytable
+    - pyyaml
+    - tf2onnx
+    - onnx 
+    - onnxruntime
