@@ -526,3 +526,4 @@ def DRRN_denoising(signal_size=512):
     model.add(Dense(1, activation='linear'))
 
     return model
+
