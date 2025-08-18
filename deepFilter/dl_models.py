@@ -9,52 +9,32 @@
 #
 #===========================================================
 
-import tensorflow as tf
+
 import keras
 from keras.models import Sequential, Model
-from keras.layers import (
-    Dense, Conv1D, Flatten, Dropout, BatchNormalization,
-    concatenate, Activation, Input, Conv2DTranspose, Lambda, LSTM, Reshape, Embedding
-)
+from keras.layers import Dense, Conv1D, Flatten, Dropout, BatchNormalization,\
+                         concatenate, Activation, Input, Conv2DTranspose, Lambda, LSTM, Reshape, Embedding
+
 import keras.backend as K
 
 def Conv1DTranspose(input_tensor, filters, kernel_size, strides=2, activation='relu', padding='same'):
     """
-    Emulate 1D transpose conv with Conv2DTranspose:
-      (B, T, C) -> expand -> (B, T, 1, C) -> Conv2DTranspose -> (B, T', 1, F) -> squeeze -> (B, T', F)
+        https://stackoverflow.com/a/45788699
+
+        input_tensor: tensor, with the shape (batch_size, time_steps, dims)
+        filters: int, output dimension, i.e. the output tensor will have the shape of (batch_size, time_steps, filters)
+        kernel_size: int, size of the convolution kernel
+        strides: int, convolution step size
+        padding: 'same' | 'valid'
     """
-
-    # expand dims: (B, T, C) -> (B, T, 1, C)
-    def _expand(x):
-        return tf.expand_dims(x, axis=2)
-
-    def _expand_out(s):
-        # s: (B, T, C)
-        B, T, C = s[0], s[1], s[2]
-        return (B, T, 1, C)
-
-    x = Lambda(_expand, output_shape=_expand_out)(input_tensor)
-
-    # transpose conv along time dimension only
-    x = Conv2DTranspose(
-        filters=filters,
-        kernel_size=(kernel_size, 1),
-        strides=(strides, 1),
-        activation=activation,
-        padding=padding,
-    )(x)
-
-    # squeeze back: (B, T', 1, F) -> (B, T', F)
-    def _squeeze(x):
-        return tf.squeeze(x, axis=2)
-
-    def _squeeze_out(s):
-        # s: (B, T', 1, F) -> (B, T', F)
-        return (s[0], s[1], s[3])
-
-    x = Lambda(_squeeze, output_shape=_squeeze_out)(x)
+    x = Lambda(lambda x: K.expand_dims(x, axis=2))(input_tensor)
+    x = Conv2DTranspose(filters=filters,
+                        kernel_size=(kernel_size, 1),
+                        activation=activation,
+                        strides=(strides, 1),
+                        padding=padding)(x)
+    x = Lambda(lambda x: K.squeeze(x, axis=2))(x)
     return x
-
 
 ##########################################################################
 
@@ -546,3 +526,24 @@ def DRRN_denoising(signal_size=512):
     model.add(Dense(1, activation='linear'))
 
     return model
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
