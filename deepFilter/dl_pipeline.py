@@ -107,7 +107,8 @@ def train_dl(Dataset, experiment, signal_size=512):
 
     model.compile(loss=criterion,
                   optimizer=keras.optimizers.Adam(learning_rate=lr),
-                  metrics=[losses.mean_squared_error, losses.mean_absolute_error, ssd_loss, mad_loss])
+                  metrics=[keras.metrics.MeanSquaredError(), keras.metrics.MeanAbsoluteError(), ssd_loss, mad_loss]
+)
 
     # Keras Callbacks
 
@@ -157,7 +158,8 @@ def train_dl(Dataset, experiment, signal_size=512):
                          checkpoint,
                          tboard])
 
-    K.clear_session()
+    tf.keras.backend.clear_session()
+
 
 
 
@@ -219,7 +221,8 @@ def test_dl(Dataset, experiment, signal_size=512):
 
     model.compile(loss=criterion,
                   optimizer=keras.optimizers.Adam(learning_rate=0.01),
-                  metrics=[losses.mean_squared_error, losses.mean_absolute_error, ssd_loss, mad_loss])
+                  metrics=[keras.metrics.MeanSquaredError(), keras.metrics.MeanAbsoluteError(), ssd_loss, mad_loss]
+)
 
     # checkpoint
     model_filepath = model_label + '_best.weights.h5'
@@ -230,6 +233,7 @@ def test_dl(Dataset, experiment, signal_size=512):
     y_pred = model.predict(X_test, batch_size=batch_size, verbose=1)
 
 
-    K.clear_session()
+    tf.keras.backend.clear_session()
+
 
     return [X_test, y_test, y_pred]
