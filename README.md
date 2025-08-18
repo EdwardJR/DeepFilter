@@ -1,3 +1,4 @@
+*** Tweaked for compatibility ***
 # DeepFilter
 For a more theoretical information please visit our paper in the journal **Biomedical Signal and Control**: 
 [https://www.sciencedirect.com/science/article/abs/pii/S1746809421005899](https://www.sciencedirect.com/science/article/abs/pii/S1746809421005899 "paper")  
