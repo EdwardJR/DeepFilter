@@ -14,28 +14,28 @@ from keras import backend as K
 from keras.callbacks import ModelCheckpoint, ReduceLROnPlateau, EarlyStopping, TensorBoard
 from keras import losses
 from sklearn.model_selection import train_test_split
-
+import tensorflow as tf
 import deepFilter.dl_models as models
 
 
 # Custom loss SSD
 def ssd_loss(y_true, y_pred):
-    return K.sum(K.square(y_pred - y_true), axis=-2)
+    return tf.reduce_sum(tf.square(y_pred - y_true), axis=-2)
 
 # Combined loss SSD + MSE
 def combined_ssd_mse_loss(y_true, y_pred):
-    return K.mean(K.square(y_true - y_pred), axis=-2) * 500 + K.sum(K.square(y_true - y_pred), axis=-2)
+    return tf.reduce_mean(tf.square(y_true - y_pred), axis=-2) * 500 + tf.reduce_sum(tf.square(y_true - y_pred), axis=-2)
 
 def combined_ssd_mad_loss(y_true, y_pred):
-    return K.max(K.square(y_true - y_pred), axis=-2) * 50 + K.sum(K.square(y_true - y_pred), axis=-2)
+    return tf.reduce_max(tf.square(y_true - y_pred), axis=-2) * 50 + tf.reduce_sum(tf.square(y_true - y_pred), axis=-2)
 
 # Custom loss SAD
 def sad_loss(y_true, y_pred):
-    return K.sum(K.sqrt(K.square(y_pred - y_true)), axis=-2)
+    return tf.reduce_sum(tf.sqrt(tf.square(y_pred - y_true)), axis=-2)
 
 # Custom loss MAD
 def mad_loss(y_true, y_pred):
-    return K.max(K.square(y_pred - y_true), axis=-2)
+    return tf.reduce_max(tf.square(y_pred - y_true), axis=-2)
 
 
 def train_dl(Dataset, experiment, signal_size=512):
@@ -106,13 +106,13 @@ def train_dl(Dataset, experiment, signal_size=512):
 
 
     model.compile(loss=criterion,
-                  optimizer=keras.optimizers.Adam(lr=lr),
+                  optimizer=keras.optimizers.Adam(learning_rate=lr),
                   metrics=[losses.mean_squared_error, losses.mean_absolute_error, ssd_loss, mad_loss])
 
     # Keras Callbacks
 
     # checkpoint
-    model_filepath = model_label + '_weights.best.hdf5'
+    model_filepath = model_label + '_best.weights.h5'
 
     checkpoint = ModelCheckpoint(model_filepath,
                                  monitor="val_loss",
@@ -137,11 +137,11 @@ def train_dl(Dataset, experiment, signal_size=512):
 
     tb_log_dir = './runs/' + model_label
 
-    tboard = TensorBoard(log_dir=tb_log_dir, histogram_freq=0,
-                         write_graph=False, write_grads=False,
-                         write_images=False, embeddings_freq=0,
-                         embeddings_layer_names=None,
-                         embeddings_metadata=None)
+    tboard = TensorBoard(
+        log_dir=tb_log_dir,
+        histogram_freq=0,
+        write_graph=False
+    )
 
     # To run the tensor board
     # tensorboard --logdir=./runs
@@ -218,11 +218,11 @@ def test_dl(Dataset, experiment, signal_size=512):
         criterion = combined_ssd_mad_loss
 
     model.compile(loss=criterion,
-                  optimizer=keras.optimizers.Adam(lr=0.01),
+                  optimizer=keras.optimizers.Adam(learning_rate=0.01),
                   metrics=[losses.mean_squared_error, losses.mean_absolute_error, ssd_loss, mad_loss])
 
     # checkpoint
-    model_filepath = model_label + '_weights.best.hdf5'
+    model_filepath = model_label + '_best.weights.h5'
     # load weights
     model.load_weights(model_filepath)
 
