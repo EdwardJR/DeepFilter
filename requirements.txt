@@ -92,10 +92,9 @@ six
 soundfile
 statsmodels
 sympy
-tensorflow
+tensorflow==2.10.0
 keras
 tensorboard
-tensorflow-io-gcs-filesystem
 termcolor
 tf2onnx
 threadpoolctl
