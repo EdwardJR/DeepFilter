@@ -80,26 +80,26 @@ def Data_Preparation(noise_version=1):
     # https://www.physionet.org/physiobank/database/qtdb/doc/node4.html
     # Selected test signal amount (14) represent ~13 % of the total
 
-    test_set = ['sel123',  # Record from MIT-BIH Arrhythmia Database
-                'sel233',  # Record from MIT-BIH Arrhythmia Database
+    test_set = ['qt-database-1.0.0\\sel123',  # Record from MIT-BIH Arrhythmia Database
+                'qt-database-1.0.0\\sel233',  # Record from MIT-BIH Arrhythmia Database
 
-                'sel302',  # Record from MIT-BIH ST Change Database
-                'sel307',  # Record from MIT-BIH ST Change Database
+                'qt-database-1.0.0\\sel302',  # Record from MIT-BIH ST Change Database
+                'qt-database-1.0.0\\sel307',  # Record from MIT-BIH ST Change Database
 
-                'sel820',  # Record from MIT-BIH Supraventricular Arrhythmia Database
-                'sel853',  # Record from MIT-BIH Supraventricular Arrhythmia Database
+                'qt-database-1.0.0\\sel820',  # Record from MIT-BIH Supraventricular Arrhythmia Database
+                'qt-database-1.0.0\\sel853',  # Record from MIT-BIH Supraventricular Arrhythmia Database
 
-                'sel16420',  # Record from MIT-BIH Normal Sinus Rhythm Database
-                'sel16795',  # Record from MIT-BIH Normal Sinus Rhythm Database
+                'qt-database-1.0.0\\sel16420',  # Record from MIT-BIH Normal Sinus Rhythm Database
+                'qt-database-1.0.0\\sel16795',  # Record from MIT-BIH Normal Sinus Rhythm Database
 
-                'sele0106',  # Record from European ST-T Database
-                'sele0121',  # Record from European ST-T Database
+                'qt-database-1.0.0\\sele0106',  # Record from European ST-T Database
+                'qt-database-1.0.0\\sele0121',  # Record from European ST-T Database
 
-                'sel32',  # Record from ``sudden death'' patients from BIH
-                'sel49',  # Record from ``sudden death'' patients from BIH
+                'qt-database-1.0.0\\sel32',  # Record from ``sudden death'' patients from BIH
+                'qt-database-1.0.0\\sel49',  # Record from ``sudden death'' patients from BIH
 
-                'sel14046',  # Record from MIT-BIH Long-Term ECG Database
-                'sel15814',  # Record from MIT-BIH Long-Term ECG Database
+                'qt-database-1.0.0\\sel14046',  # Record from MIT-BIH Long-Term ECG Database
+                'qt-database-1.0.0\\sel15814',  # Record from MIT-BIH Long-Term ECG Database
                 ]
 
 
