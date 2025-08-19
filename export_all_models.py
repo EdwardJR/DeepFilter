@@ -20,32 +20,32 @@ def get_model_config(model_name):
         'Vanilla L': {
             'model_fn': lambda: deep_filter_vanilla_linear(signal_size=512),
             'loss_fn': combined_ssd_mad_loss,
-            'weight_file': 'Vanilla_L_weights.best.hdf5'
+            'weight_file': 'Vanilla_L_best.weights.h5'
         },
         'Vanilla NL': {
             'model_fn': lambda: deep_filter_vanilla_Nlinear(signal_size=512),
             'loss_fn': combined_ssd_mad_loss,
-            'weight_file': 'Vanilla_NL_weights.best.hdf5'
+            'weight_file': 'Vanilla_NL_best.weights.h5'
         },
         'FCN-DAE': {
             'model_fn': lambda: FCN_DAE(signal_size=512),
             'loss_fn': ssd_loss,
-            'weight_file': 'FCN_DAE_weights.best.hdf5'
+            'weight_file': 'FCN_DAE_best.weights.h5'
         },
         'DRNN': {
             'model_fn': lambda: DRRN_denoising(signal_size=512),
             'loss_fn': tf.keras.losses.mean_squared_error,
-            'weight_file': 'DRNN_weights.best.hdf5'
+            'weight_file': 'DRNN_best.weights.h5'
         },
         'Multibranch LANL': {
             'model_fn': lambda: deep_filter_I_LANL(signal_size=512),
             'loss_fn': combined_ssd_mad_loss,
-            'weight_file': 'Multibranch_LANL_weights.best.hdf5'
+            'weight_file': 'Multibranch_LANL_best.weights.h5'
         },
         'Multibranch LANLD': {
             'model_fn': lambda: deep_filter_model_I_LANL_dilated(signal_size=512),
             'loss_fn': combined_ssd_mad_loss,
-            'weight_file': 'Multibranch_LANLD_weights.best.hdf5'
+            'weight_file': 'Multibranch_LANLD_best.weights.h5'
         }
     }
     
