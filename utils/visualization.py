@@ -13,20 +13,25 @@ import seaborn as sns
 import pandas as pd
 import numpy as np
 from prettytable import PrettyTable
+import os
+
+def check_and_create_dir(directory):
+    """Creates a directory if it does not exist."""
+    if not os.path.exists(directory):
+        os.makedirs(directory)
 
 def generate_violinplots(np_data, description, ylabel, log):
+    output_dir = "output_images"
+    check_and_create_dir(output_dir)
+    
     # Process the results and store in Panda objects
-
     col = description
     loss_val_np = np.rot90(np_data)
     pd_df = pd.DataFrame.from_records(loss_val_np, columns=col)
 
     # Set up the matplotlib figure
-
     f, ax = plt.subplots()
-
     sns.set(style="whitegrid")
-
     ax = sns.violinplot(data=pd_df, palette="Set3", bw=.2, cut=1, linewidth=1)
 
     if log:
@@ -34,24 +39,23 @@ def generate_violinplots(np_data, description, ylabel, log):
 
     ax.set(xlabel='Models/Methods', ylabel=ylabel)
     ax = sns.despine(left=True, bottom=True)
-
+    
+    plt.savefig(os.path.join(output_dir, f'violinplot_{ylabel.replace(" ", "_")}.png'))
     plt.show()
-
-    #plt.savefig(store_folder + 'violinplot_fco' + info + description + '.png')
 
 
 def generate_barplot(np_data, description, ylabel, log):
+    output_dir = "output_images"
+    check_and_create_dir(output_dir)
+    
     # Process the results and store in Panda objects
     col = description
     loss_val_np = np.rot90(np_data)
     pd_df = pd.DataFrame.from_records(loss_val_np, columns=col)
 
     # Set up the matplotlib figure
-
     f, ax = plt.subplots()
-
     sns.set(style="whitegrid")
-
     ax = sns.barplot(data=pd_df)
 
     if log:
@@ -60,23 +64,22 @@ def generate_barplot(np_data, description, ylabel, log):
     ax.set(xlabel='Models/Methods', ylabel=ylabel)
     ax = sns.despine(left=True, bottom=True)
 
+    plt.savefig(os.path.join(output_dir, f'barplot_{ylabel.replace(" ", "_")}.png'))
     plt.show()
-
-    #plt.savefig(store_folder + 'violinplot_fco' + info + description + '.png')
 
 
 def generate_boxplot(np_data, description, ylabel, log):
+    output_dir = "output_images"
+    check_and_create_dir(output_dir)
+    
     # Process the results and store in Panda objects
     col = description
     loss_val_np = np.rot90(np_data)
     pd_df = pd.DataFrame.from_records(loss_val_np, columns=col)
 
     # Set up the matplotlib figure
-
     f, ax = plt.subplots()
-
     sns.set(style="whitegrid")
-
     ax = sns.boxplot(data=pd_df)
 
     if log:
@@ -85,23 +88,22 @@ def generate_boxplot(np_data, description, ylabel, log):
     ax.set(xlabel='Models/Methods', ylabel=ylabel)
     ax = sns.despine(left=True, bottom=True)
 
+    plt.savefig(os.path.join(output_dir, f'boxplot_{ylabel.replace(" ", "_")}.png'))
     plt.show()
-
-    #plt.savefig(store_folder + 'violinplot_fco' + info + description + '.png')
 
 
 def generate_hboxplot(np_data, description, ylabel, log, set_x_axis_size=None):
+    output_dir = "output_images"
+    check_and_create_dir(output_dir)
+    
     # Process the results and store in Panda objects
     col = description
     loss_val_np = np.rot90(np_data)
-
     pd_df = pd.DataFrame.from_records(loss_val_np, columns=col)
 
     # Set up the matplotlib figure
     sns.set(style="whitegrid")
-
     f, ax = plt.subplots(figsize=(15, 6))
-
     ax = sns.boxplot(data=pd_df, orient="h", width=0.4)
 
     if log:
@@ -112,13 +114,14 @@ def generate_hboxplot(np_data, description, ylabel, log, set_x_axis_size=None):
 
     ax.set(ylabel='Models/Methods', xlabel=ylabel)
     ax = sns.despine(left=True, bottom=True)
-
+    
+    plt.savefig(os.path.join(output_dir, f'hboxplot_{ylabel.replace(" ", "_")}.png'))
     plt.show()
-
-    #plt.savefig(store_folder + 'violinplot_fco' + info + description + '.png')
 
 
 def ecg_view(ecg, ecg_blw, ecg_dl, ecg_f, signal_name=None, beat_no=None):
+    output_dir = "output_images"
+    check_and_create_dir(output_dir)
 
     fig, ax = plt.subplots(figsize=(16, 9))
     plt.plot(ecg_blw, 'k', label='ECG + BLW')
@@ -131,16 +134,22 @@ def ecg_view(ecg, ecg_blw, ecg_dl, ecg_f, signal_name=None, beat_no=None):
     plt.xlabel('samples')
 
     leg = ax.legend()
-
-    if signal_name != None and beat_no != None:
-        plt.title('Signal ' + str(signal_name) + 'beat ' + str(beat_no))
+    
+    if signal_name is not None and beat_no is not None:
+        title = f'Signal {signal_name} beat {beat_no}'
+        filename = f'ecg_view_{signal_name}_beat_{beat_no}.png'
     else:
-        plt.title('ECG signal for comparison')
-
+        title = 'ECG signal for comparison'
+        filename = 'ecg_view_default.png'
+    
+    plt.title(title)
+    plt.savefig(os.path.join(output_dir, filename))
     plt.show()
 
 
 def ecg_view_diff(ecg, ecg_blw, ecg_dl, ecg_f, signal_name=None, beat_no=None):
+    output_dir = "output_images"
+    check_and_create_dir(output_dir)
 
     fig, ax = plt.subplots(figsize=(16, 9))
     plt.plot(ecg, 'g', label='ECG orig')
@@ -155,11 +164,15 @@ def ecg_view_diff(ecg, ecg_blw, ecg_dl, ecg_f, signal_name=None, beat_no=None):
 
     leg = ax.legend()
 
-    if signal_name != None and beat_no != None:
-        plt.title('Signal ' + str(signal_name) + 'beat ' + str(beat_no))
+    if signal_name is not None and beat_no is not None:
+        title = f'Signal Diff {signal_name} beat {beat_no}'
+        filename = f'ecg_view_diff_{signal_name}_beat_{beat_no}.png'
     else:
-        plt.title('ECG signal for comparison')
+        title = 'ECG signal for comparison'
+        filename = 'ecg_view_diff_default.png'
 
+    plt.title(title)
+    plt.savefig(os.path.join(output_dir, filename))
     plt.show()
 
 
