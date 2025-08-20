@@ -15,13 +15,16 @@ import numpy as np
 from prettytable import PrettyTable
 import os
 
+# Global output directory - can be set by calling scripts
+output_dir = "output_images"
+
 def check_and_create_dir(directory):
     """Creates a directory if it does not exist."""
     if not os.path.exists(directory):
         os.makedirs(directory)
 
 def generate_violinplots(np_data, description, ylabel, log):
-    output_dir = "output_images"
+    global output_dir
     check_and_create_dir(output_dir)
     
     # Process the results and store in Panda objects
@@ -45,7 +48,7 @@ def generate_violinplots(np_data, description, ylabel, log):
 
 
 def generate_barplot(np_data, description, ylabel, log):
-    output_dir = "output_images"
+    global output_dir
     check_and_create_dir(output_dir)
     
     # Process the results and store in Panda objects
@@ -69,7 +72,7 @@ def generate_barplot(np_data, description, ylabel, log):
 
 
 def generate_boxplot(np_data, description, ylabel, log):
-    output_dir = "output_images"
+    global output_dir
     check_and_create_dir(output_dir)
     
     # Process the results and store in Panda objects
@@ -93,7 +96,7 @@ def generate_boxplot(np_data, description, ylabel, log):
 
 
 def generate_hboxplot(np_data, description, ylabel, log, set_x_axis_size=None):
-    output_dir = "output_images"
+    global output_dir
     check_and_create_dir(output_dir)
     
     # Process the results and store in Panda objects
@@ -120,7 +123,7 @@ def generate_hboxplot(np_data, description, ylabel, log, set_x_axis_size=None):
 
 
 def ecg_view(ecg, ecg_blw, ecg_dl, ecg_f, signal_name=None, beat_no=None):
-    output_dir = "output_images"
+    global output_dir
     check_and_create_dir(output_dir)
 
     fig, ax = plt.subplots(figsize=(16, 9))
@@ -148,7 +151,7 @@ def ecg_view(ecg, ecg_blw, ecg_dl, ecg_f, signal_name=None, beat_no=None):
 
 
 def ecg_view_diff(ecg, ecg_blw, ecg_dl, ecg_f, signal_name=None, beat_no=None):
-    output_dir = "output_images"
+    global output_dir
     check_and_create_dir(output_dir)
 
     fig, ax = plt.subplots(figsize=(16, 9))
