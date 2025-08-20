@@ -11,8 +11,16 @@ import numpy as np
 import matplotlib.pyplot as plt
 import _pickle as pickle
 import onnxruntime as ort
+from datetime import datetime
 from digitalFilters.dfilters import IIR_test_Dataset, FIR_test_Dataset
 from utils.metrics import SSD
+
+def create_output_directory():
+    """Create timestamped output directory for visual comparisons"""
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    output_dir = f"visual_comparison_results_{timestamp}"
+    os.makedirs(output_dir, exist_ok=True)
+    return output_dir
 
 def load_test_data(test_data_path='test_results_Vanilla L_nv1.pkl'):
     """Load test data"""
@@ -49,7 +57,7 @@ def run_fir_filter(X_test_sample, y_test_sample):
     _, _, y_filter = FIR_test_Dataset(dataset)
     return y_filter
 
-def create_single_signal_comparison():
+def create_single_signal_comparison(output_dir):
     """Create a detailed comparison for a single signal"""
     
     print("📊 Creating single signal detailed comparison...")
@@ -64,12 +72,14 @@ def create_single_signal_comparison():
     
     print(f"Using signal {signal_idx} for comparison")
     
-    # ONNX models to test
+    # ALL ONNX models to test (including missing ones)
     onnx_models = {
         'Multibranch_LANLD': 'onnx_models/Multibranch_LANLD.onnx',
+        'Multibranch_LANL': 'onnx_models/Multibranch_LANL.onnx',
         'FCN_DAE': 'onnx_models/FCN_DAE.onnx', 
+        'DRNN': 'onnx_models/DRNN.onnx',  # This IS the LSTM model
         'Vanilla_NL': 'onnx_models/Vanilla_NL.onnx',
-        'DRNN': 'onnx_models/DRNN.onnx'
+        'Vanilla_L': 'onnx_models/Vanilla_L.onnx'
     }
     
     # Run all inferences
@@ -147,12 +157,13 @@ def create_single_signal_comparison():
             axes[1, i].axis('off')
     
     plt.tight_layout()
-    plt.savefig('single_signal_comparison.png', dpi=150, bbox_inches='tight')
+    plt.savefig(os.path.join(output_dir, 'single_signal_comparison.png'), dpi=150, bbox_inches='tight')
+    plt.close()
     print("✅ Single signal comparison saved: single_signal_comparison.png")
     
     return results, noisy_signal, clean_signal
 
-def create_multiple_signals_grid():
+def create_multiple_signals_grid(output_dir):
     """Create a grid showing multiple signals for the best models"""
     
     print("📊 Creating multiple signals grid...")
@@ -249,10 +260,11 @@ def create_multiple_signals_grid():
                 axes[row, col].set_xlabel('Time (ms)')
     
     plt.tight_layout()
-    plt.savefig('multiple_signals_grid.png', dpi=150, bbox_inches='tight')
+    plt.savefig(os.path.join(output_dir, 'multiple_signals_grid.png'), dpi=150, bbox_inches='tight')
+    plt.close()
     print("✅ Multiple signals grid saved: multiple_signals_grid.png")
 
-def create_performance_summary():
+def create_performance_summary(output_dir):
     """Create a performance summary chart"""
     
     print("📊 Creating performance summary...")
@@ -342,10 +354,11 @@ def create_performance_summary():
     ax4.legend()
     
     plt.tight_layout()
-    plt.savefig('performance_summary.png', dpi=150, bbox_inches='tight')
+    plt.savefig(os.path.join(output_dir, 'performance_summary.png'), dpi=150, bbox_inches='tight')
+    plt.close()
     print("✅ Performance summary saved: performance_summary.png")
 
-def create_single_signal_with_both_filters():
+def create_single_signal_with_both_filters(output_dir):
     """Create a detailed comparison for a single signal including both IIR and FIR filters"""
     
     print("📊 Creating single signal comparison with BOTH filters (this will take longer)...")
@@ -447,12 +460,13 @@ def create_single_signal_with_both_filters():
             axes[1, i].axis('off')
     
     plt.tight_layout()
-    plt.savefig('single_signal_with_both_filters.png', dpi=150, bbox_inches='tight')
+    plt.savefig(os.path.join(output_dir, 'single_signal_with_both_filters.png'), dpi=150, bbox_inches='tight')
+    plt.close()
     print("✅ Single signal comparison with both filters saved: single_signal_with_both_filters.png")
     
     return results, noisy_signal, clean_signal
 
-def create_multiple_signals_with_both_filters():
+def create_multiple_signals_with_both_filters(output_dir):
     """Create a grid showing multiple signals with both IIR and FIR filters"""
     
     print("📊 Creating multiple signals grid with BOTH filters (this will take several minutes)...")
@@ -568,8 +582,105 @@ def create_multiple_signals_with_both_filters():
                 axes[row, col].set_xlabel('Time (ms)')
     
     plt.tight_layout()
-    plt.savefig('multiple_signals_with_both_filters.png', dpi=150, bbox_inches='tight')
+    plt.savefig(os.path.join(output_dir, 'multiple_signals_with_both_filters.png'), dpi=150, bbox_inches='tight')
+    plt.close()
     print("✅ Multiple signals grid with both filters saved: multiple_signals_with_both_filters.png")
+
+def create_individual_model_comparisons(output_dir):
+    """Create individual comparison plots for each ONNX model"""
+    
+    print("📊 Creating individual model comparison plots...")
+    
+    # Load test data
+    X_test, y_test = load_test_data()
+    
+    # Select one representative signal
+    signal_idx = len(X_test) // 2
+    X_sample = X_test[signal_idx:signal_idx+1]
+    y_sample = y_test[signal_idx:signal_idx+1]
+    
+    # ALL ONNX models to test individually
+    onnx_models = {
+        'Multibranch_LANLD': 'onnx_models/Multibranch_LANLD.onnx',
+        'Multibranch_LANL': 'onnx_models/Multibranch_LANL.onnx',
+        'FCN_DAE': 'onnx_models/FCN_DAE.onnx', 
+        'DRNN': 'onnx_models/DRNN.onnx',  # LSTM model
+        'Vanilla_NL': 'onnx_models/Vanilla_NL.onnx',
+        'Vanilla_L': 'onnx_models/Vanilla_L.onnx'
+    }
+    
+    # Prepare data
+    time_ms = np.arange(512) / 360 * 1000
+    noisy_signal = X_sample[0, :, 0]
+    clean_signal = y_sample[0, :, 0]
+    
+    # Get IIR filter result for comparison
+    y_iir = run_iir_filter(X_sample, y_sample)
+    iir_signal = y_iir[0, :, 0]
+    
+    # Create individual plots for each model
+    for model_name, model_path in onnx_models.items():
+        if os.path.exists(model_path):
+            print(f"Creating individual plot for {model_name}...")
+            
+            try:
+                # Run ONNX inference
+                y_pred = run_onnx_inference(model_path, X_sample)
+                pred_signal = y_pred[0, :, 0]
+                
+                # Calculate metrics
+                mse_dl = np.mean((pred_signal - clean_signal) ** 2)
+                mse_iir = np.mean((iir_signal - clean_signal) ** 2)
+                ssd_dl = np.sum((pred_signal - clean_signal) ** 2)
+                ssd_iir = np.sum((iir_signal - clean_signal) ** 2)
+                
+                # Create individual comparison plot
+                fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(14, 10))
+                
+                # Top plot: Signal comparison
+                ax1.plot(time_ms, noisy_signal, 'k-', linewidth=1, alpha=0.7, label='Noisy Input (ECG + BLW)')
+                ax1.plot(time_ms, clean_signal, 'g-', linewidth=2, label='Ground Truth (Clean ECG)')
+                ax1.plot(time_ms, pred_signal, 'b-', linewidth=1.5, label=f'{model_name.replace("_", " ")} Filtered')
+                ax1.plot(time_ms, iir_signal, 'r-', linewidth=1.5, label='IIR Filter')
+                
+                ax1.set_title(f'{model_name.replace("_", " ")} vs IIR Filter Comparison\n'
+                             f'DL MSE: {mse_dl:.4f} | IIR MSE: {mse_iir:.4f} | '
+                             f'Improvement: {((mse_iir - mse_dl) / mse_iir * 100):.1f}%', 
+                             fontsize=14, fontweight='bold')
+                ax1.set_ylabel('Amplitude')
+                ax1.grid(True, alpha=0.3)
+                ax1.legend()
+                ax1.set_ylim(-2, 2)
+                
+                # Bottom plot: Error comparison
+                error_dl = clean_signal - pred_signal
+                error_iir = clean_signal - iir_signal
+                
+                ax2.plot(time_ms, error_dl, 'b-', linewidth=1.5, label=f'{model_name.replace("_", " ")} Error')
+                ax2.plot(time_ms, error_iir, 'r-', linewidth=1.5, label='IIR Filter Error')
+                ax2.axhline(y=0, color='k', linestyle='--', alpha=0.5)
+                
+                ax2.set_title(f'Filtering Error Comparison\n'
+                             f'DL SSD: {ssd_dl:.2f} | IIR SSD: {ssd_iir:.2f}', 
+                             fontsize=12, fontweight='bold')
+                ax2.set_xlabel('Time (ms)')
+                ax2.set_ylabel('Error (Ground Truth - Prediction)')
+                ax2.grid(True, alpha=0.3)
+                ax2.legend()
+                
+                plt.tight_layout()
+                
+                # Save individual plot
+                filename = f'individual_{model_name.lower()}_comparison.png'
+                plt.savefig(os.path.join(output_dir, filename), dpi=150, bbox_inches='tight')
+                plt.close()
+                
+                print(f"✅ Individual plot saved: {filename}")
+                
+            except Exception as e:
+                print(f"❌ Error creating plot for {model_name}: {e}")
+        else:
+            print(f"❌ Model not found: {model_path}")
 
 def main():
     """Main function"""
@@ -577,34 +688,72 @@ def main():
     print("🎨 Creating Visual Comparisons for ONNX Models")
     print("=" * 60)
     
+    # Create timestamped output directory
+    output_dir = create_output_directory()
+    print(f"📁 Output directory: {output_dir}")
+    
     try:
-        # Create single signal detailed comparison (IIR only - fast)
-        create_single_signal_comparison()
+        # Create single signal detailed comparison (ALL 6 models + IIR)
+        create_single_signal_comparison(output_dir)
         
-        # Create multiple signals grid (IIR only - fast)
-        create_multiple_signals_grid()
+        # Create individual model comparison plots
+        create_individual_model_comparisons(output_dir)
         
-        # Create performance summary
-        create_performance_summary()
+        # Create multiple signals grid (best 3 models + IIR)
+        create_multiple_signals_grid(output_dir)
+        
+        # Create performance summary (if CSV available)
+        create_performance_summary(output_dir)
         
         # Automatically create versions with both filters
         print(f"\n⏳ Creating versions with both filters (this will take time)...")
         
         # Create single signal with both filters
-        create_single_signal_with_both_filters()
+        create_single_signal_with_both_filters(output_dir)
         
         # Create multiple signals with both filters
-        create_multiple_signals_with_both_filters()
+        create_multiple_signals_with_both_filters(output_dir)
         
-        print(f"\n🎉 ALL VISUALIZATIONS COMPLETE (including FIR)!")
-        print(f"Generated files:")
-        print(f"   - single_signal_comparison.png: IIR only (fast)")
-        print(f"   - single_signal_with_both_filters.png: IIR + FIR (complete)")
-        print(f"   - multiple_signals_grid.png: IIR only (fast)")
-        print(f"   - multiple_signals_with_both_filters.png: IIR + FIR (complete)")
-        print(f"   - performance_summary.png: Overall performance comparison")
+        # Create summary file
+        summary_file = os.path.join(output_dir, "SUMMARY.txt")
+        with open(summary_file, 'w', encoding='utf-8') as f:
+            f.write("=== VISUAL COMPARISON RESULTS SUMMARY ===\n\n")
+            f.write(f"Generated on: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n\n")
+            f.write("Generated files:\n")
+            f.write("- single_signal_comparison.png: ALL 6 ONNX models + IIR comparison\n")
+            f.write("- individual_*_comparison.png: Individual model vs IIR comparisons (6 files)\n")
+            f.write("- single_signal_with_both_filters.png: Best 4 models + IIR + FIR\n")
+            f.write("- multiple_signals_grid.png: Best 3 models across multiple signals\n")
+            f.write("- multiple_signals_with_both_filters.png: Best 3 models + both filters\n")
+            f.write("- performance_summary.png: Overall performance comparison (if CSV available)\n\n")
+            f.write("Models tested:\n")
+            f.write("[OK] Multibranch_LANLD (Best model - dilated convolutions)\n")
+            f.write("[OK] Multibranch_LANL (Multi-branch linear/non-linear)\n")
+            f.write("[OK] FCN_DAE (Fully Convolutional Denoising Autoencoder)\n")
+            f.write("[OK] DRNN (Deep Recurrent Neural Network - LSTM model)\n")
+            f.write("[OK] Vanilla_NL (Vanilla CNN with non-linear activations)\n")
+            f.write("[OK] Vanilla_L (Vanilla CNN with linear activations)\n")
+            f.write("[OK] IIR Filter (Classical digital filter)\n")
+            f.write("[OK] FIR Filter (Classical digital filter - in some plots)\n\n")
+            f.write("Note: DRNN is the LSTM-based model in the system.\n")
         
-        print(f"\n📊 Check the PNG files for comprehensive visual analysis!")
+        print(f"\n🎉 ALL VISUALIZATIONS COMPLETE!")
+        print(f"📁 Results saved to: {output_dir}")
+        print(f"\n📊 Generated files:")
+        print(f"   ✅ single_signal_comparison.png: ALL 6 ONNX models + IIR")
+        print(f"   ✅ individual_*_comparison.png: 6 individual model comparisons")
+        print(f"   ✅ single_signal_with_both_filters.png: Best 4 models + both filters")
+        print(f"   ✅ multiple_signals_grid.png: Best 3 models across signals")
+        print(f"   ✅ multiple_signals_with_both_filters.png: Complete comparison")
+        print(f"   ✅ performance_summary.png: Overall performance (if CSV available)")
+        print(f"   ✅ SUMMARY.txt: Complete summary of generated files")
+        
+        print(f"\n🔍 Key Features:")
+        print(f"   • Tests ALL 6 ONNX models (including DRNN/LSTM)")
+        print(f"   • Organized timestamped output directory")
+        print(f"   • Individual model comparison plots")
+        print(f"   • Comprehensive multi-signal analysis")
+        print(f"   • Both classical filters (IIR + FIR) included")
         
     except Exception as e:
         print(f"❌ Error creating visualizations: {e}")
