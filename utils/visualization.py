@@ -122,14 +122,14 @@ def generate_hboxplot(np_data, description, ylabel, log, set_x_axis_size=None):
     plt.show()
 
 
-def ecg_view(ecg, ecg_blw, ecg_dl, ecg_f, signal_name=None, beat_no=None):
+def ecg_view(ecg, ecg_blw, ecg_dl, ecg_f, signal_name=None, beat_no=None, dl_model_name="Multibranch LANLD"):
     global output_dir
     check_and_create_dir(output_dir)
 
     fig, ax = plt.subplots(figsize=(16, 9))
     plt.plot(ecg_blw, 'k', label='ECG + BLW')
     plt.plot(ecg, 'g', label='ECG orig')
-    plt.plot(ecg_dl, 'b', label='ECG DL Filtered')
+    plt.plot(ecg_dl, 'b', label=f'ECG {dl_model_name} Filtered')
     plt.plot(ecg_f, 'r', label='ECG IIR Filtered')
     plt.grid(True)
 
@@ -150,15 +150,15 @@ def ecg_view(ecg, ecg_blw, ecg_dl, ecg_f, signal_name=None, beat_no=None):
     plt.show()
 
 
-def ecg_view_diff(ecg, ecg_blw, ecg_dl, ecg_f, signal_name=None, beat_no=None):
+def ecg_view_diff(ecg, ecg_blw, ecg_dl, ecg_f, signal_name=None, beat_no=None, dl_model_name="Multibranch LANLD"):
     global output_dir
     check_and_create_dir(output_dir)
 
     fig, ax = plt.subplots(figsize=(16, 9))
     plt.plot(ecg, 'g', label='ECG orig')
-    plt.plot(ecg_dl, 'b', label='ECG DL Filtered')
+    plt.plot(ecg_dl, 'b', label=f'ECG {dl_model_name} Filtered')
     plt.plot(ecg_f, 'r', label='ECG IIR Filtered')
-    plt.plot(ecg - ecg_dl, color='#0099ff', lw=3, label='Difference ECG - DL Filter')
+    plt.plot(ecg - ecg_dl, color='#0099ff', lw=3, label=f'Difference ECG - {dl_model_name}')
     plt.plot(ecg - ecg_f, color='#cb828d', lw=3, label='Difference ECG - IIR Filter')
     plt.grid(True)
 
