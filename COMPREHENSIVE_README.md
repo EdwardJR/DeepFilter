@@ -35,13 +35,13 @@ ECG Data Pipeline:
 └─────────────────┘    └──────────────────┘    └─────────────────┘
                                                          │
 ┌─────────────────────────────────────────────────────────────────┐
-│                    Model Training & Testing                      │
+│                    Model Training & Testing                     │
 ├─────────────────┬─────────────────┬─────────────────────────────┤
 │  Deep Learning  │  Classical      │         Evaluation          │
 │     Models      │   Filters       │                             │
-│   (6 models)    │  (FIR + IIR)    │  • Performance Metrics     │
-│                 │                 │  • Visual Comparisons      │
-│                 │                 │  • Statistical Analysis    │
+│   (6 models)    │  (FIR + IIR)    │  • Performance Metrics      │
+│                 │                 │  • Visual Comparisons       │
+│                 │                 │  • Statistical Analysis     │
 └─────────────────┴─────────────────┴─────────────────────────────┘
 ```
 
