@@ -103,8 +103,6 @@ def Data_Preparation(noise_version=1):
                 ]
 
 
-
-
     # Creating the train and test dataset, each datapoint has 512 samples and is zero padded
     # beats bigger that 512 samples are discarded to avoid wrong split beats ans to reduce
     # computation.
