@@ -50,7 +50,7 @@ mpmath
 multidict
 munkres
 networkx
-numpy
+numpy==1.26.4
 oauthlib
 onnx
 onnxruntime
