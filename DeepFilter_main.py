@@ -36,7 +36,6 @@ if __name__ == "__main__":
                       ]
 
     noise_versions = [1, 2]
-    #noise_versions = [1]
     for nv in noise_versions:
         # Data_Preparation() function assumes that QT database and Noise Stress Test Database are uncompresed
         # inside a folder called data
@@ -537,15 +536,17 @@ if __name__ == "__main__":
                     ecg_blw=ecgbl_signals2plot[i],
                     ecg_dl=dl_signals2plot[i],
                     ecg_f=fil_signals2plot[i],
-                    signal_name=None,
-                    beat_no=None)
+                    signal_name=f"signal_{signals_index[i]}",
+                    beat_no=i+1,
+                    dl_model_name="Multibranch LANLD")
 
         vs.ecg_view_diff(ecg=ecg_signals2plot[i],
                          ecg_blw=ecgbl_signals2plot[i],
                          ecg_dl=dl_signals2plot[i],
                          ecg_f=fil_signals2plot[i],
-                         signal_name=None,
-                         beat_no=None)
+                         signal_name=f"signal_{signals_index[i]}",
+                         beat_no=i+1,
+                         dl_model_name="Multibranch LANLD")
 
 
 
